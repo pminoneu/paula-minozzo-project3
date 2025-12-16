@@ -1,13 +1,30 @@
 import mongoose from "mongoose";
-import UserSchema from "../schema/user.schema.js";
+import GameSchema from "../schema/game.schema.js";
 
-const GameModel = mongoose.model("GameModel", GameSchema);
+const GameModel = mongoose.model("Game", GameSchema);
 
-export function createNewGame(newGame) {
-    return GameModel.create(newGame);
+export function createGame(game) {
+    return GameModel.create(game);
 }
 
-export function getGamesByUserId(userId) {
-    return GameModel.find({ userId }).exec();
-}   
+export function getAllGames() {
+    return GameModel.find().exec();
+}
+
+export function findGameById(id) {
+    return GameModel.findById(id).exec();
+}
+
+export function deleteGame(id) {
+    return GameModel.findByIdAndDelete(id).exec();
+}
+
+export function markGameCompleted(gameId, username) {
+    return GameModel.findByIdAndUpdate(
+        gameId,
+        { $addToSet: { completedBy: username } },
+        { new: true }
+    ).exec();
+}
+
 export default GameModel;
